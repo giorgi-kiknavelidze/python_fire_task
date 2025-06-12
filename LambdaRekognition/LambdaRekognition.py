@@ -1,14 +1,13 @@
+from rekognition_result_repository import RekognitionResultRepository
+from rec
 import boto3
-import json
-import uuid
-from datetime import datetime
 
 def lambda_handler(event, context):
     rekognition = boto3.client('rekognition')
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb_client = boto3.client('dynamodb')
     s3 = boto3.client('s3')
 
-    table = dynamodb.Table('rekogintionAnalysesDB')
+    repo = RekognitionResultRepository(dynamodb_client, "rekognitionAnalysesDB")
 
     for record in event['Records']:
         bucket = record['s3']['bucket']['name']
@@ -26,24 +25,14 @@ def lambda_handler(event, context):
                 MinConfidence=75
             )
 
-            analysis_id = str(uuid.uuid4())
-            current_time = datetime.now().isoformat()
+            response_str = json.dumps(response)
 
-            item = {
-                'AnalysisID': analysis_id,
-                'ImageBucket': bucket,
-                'ImageKey': key,
-                'RekognitionResponse': json.dumps(response), 
-                'AnalysisDate': current_time
-            }
-
-            table.put_item(Item=item)
+            repo.update_result("LambdaRekognition.py", response_str)
 
             return {
                 'statusCode': 200,
                 'body': json.dumps({
-                    'message': 'Rekognition analysis saved successfully',
-                    'analysis_id': analysis_id
+                    'message': 'Rekognition analysis saved successfully'
                 })
             }
 
