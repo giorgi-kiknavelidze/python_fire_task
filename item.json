@@ -1,0 +1,45 @@
+{
+  "filename": { "S": "car_inventory" },
+  "cars": {
+    "L": [
+      {
+        "M": {
+          "id": { "N": "1" },
+          "make": { "S": "Toyota" },
+          "model": { "S": "Camry" },
+          "year": { "N": "2022" },
+          "price": { "N": "24500" },
+          "features": {
+            "L": [
+              { "S": "Bluetooth" },
+              { "S": "Backup Camera" },
+              { "S": "Cruise Control" }
+            ]
+          },
+          "available": { "BOOL": true },
+          "color": { "S": "Silver" },
+          "mileage": { "N": "12000" }
+        }
+      },
+      {
+        "M": {
+          "id": { "N": "2" },
+          "make": { "S": "Honda" },
+          "model": { "S": "Civic" },
+          "year": { "N": "2021" },
+          "price": { "N": "21500" },
+          "features": {
+            "L": [
+              { "S": "Apple CarPlay" },
+              { "S": "Lane Assist" },
+              { "S": "Heated Seats" }
+            ]
+          },
+          "available": { "BOOL": false },
+          "color": { "S": "Black" },
+          "mileage": { "N": "18000" }
+        }
+      }
+    ]
+  }
+}

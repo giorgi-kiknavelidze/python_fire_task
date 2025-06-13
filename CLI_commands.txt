@@ -1,0 +1,21 @@
+#---------------------------  S3_service.py CLI commands  #--------------------------- 
+
+1.)  aws s3api put-object --bucket lambdabucketfiretask --key FilesFolder/remote_cars_file.txt --body ./cars.txt  # upload file
+
+2.)  aws s3api get-object --bucket lambdabucketfiretask --key FilesFolder/remote_cars_file.txt downloaded_car_file.txt  # download file
+
+3.)  aws s3api get-object --bucket lambdabucketfiretask --key FilesFolder/remote_cars_file.txt ./output.txt  # download file in bytes
+
+
+#---------------------------  MyAutoDownloader CLI command #---------------------------
+
+4.)  python my_auto_downloader.py 3 ./downloaded_images
+
+
+#---------------------------  MyAutoDownloader CLI command #------------------------
+
+5.)  aws dynamodb describe-table --table-name RekognitionResultsTable    # exists table or not
+
+6.)  aws dynamodb create-table --table-name RekognitionResultsTable --attribute-definitions AttributeName=filename,AttributeType=S --key-schema AttributeName=filename,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 & aws dynamodb wait table-exists --table-name RekognitionResultsTable  # create DynamoDB table
+
+7.)  aws dynamodb put-item --table-name RekognitionResultsTable --item file://item.json  # add item to DynamoDB
