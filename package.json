@@ -10,5 +10,13 @@
   "description": "",
   "dependencies": {
     "serverless": "^4.17.0"
+  },
+  "overrides": {
+    "serverless-python-requirements": {
+      "serverless": "$serverless"
+    }
+  },
+  "devDependencies": {
+    "serverless-python-requirements": "^6.1.2"
   }
 }

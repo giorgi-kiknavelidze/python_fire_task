@@ -7,8 +7,29 @@ service: fire-task
 
 provider:
   name: aws
-  runtime: python3.12
+  runtime: python3.13
+  iam:
+    role: ${env:LAB_ROLE_ARN}
+
+package:
+  patterns:
+    - '!**'
+    - 'handler.py'
+    - 'features/**'
+    - 'requirements.txt'
 
 functions:
-  hello:
-    handler: handler.hello
+  recognizer:
+    handler: handler.lambda_handler
+    role: ${env:LAB_ROLE_ARN}
+    layers:
+      - Ref: PythonRequirementsLambdaLayer
+    # labrole doesn't have permissions to create roles which serverless uses when attaching handler to bucket
+    # as such configuration to attach to bucket will need to be done manually
+
+custom:
+  pythonRequirements:
+    layer: true
+
+plugins:
+  - serverless-python-requirements
