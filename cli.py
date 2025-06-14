@@ -8,11 +8,11 @@ app = Typer()
 s3_client = boto3.client("s3")
 
 
-
 @app.command()
 def download_from_myauto(page_number: int, output_folder: str) -> None:
     my_auto_downloader = MyAutoDownloader()
     my_auto_downloader.download_images(page_number, output_folder)
+
 
 @app.command()
 def upload_to_bucket(bucket_name, source_folder: str) -> None:

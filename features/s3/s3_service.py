@@ -2,6 +2,7 @@ from types_boto3_s3 import S3Client
 import os
 from pathlib import Path
 
+
 class S3Service:
     __s3_client: S3Client
     __bucket_name: str
@@ -17,7 +18,7 @@ class S3Service:
         full_path_to_source_folder = os.path.realpath(source_folder)
         files = []
 
-        for (dirpath, dirnames, filenames) in os.walk(source_folder):
+        for dirpath, dirnames, filenames in os.walk(source_folder):
             for filename in filenames:
                 full_path = os.path.realpath(os.path.join(dirpath, filename))
                 relative_path = Path(full_path).relative_to(full_path_to_source_folder)
@@ -27,6 +28,6 @@ class S3Service:
     def upload_folder(self, source_folder: str) -> None:
         source_folder_path = Path(source_folder)
         files = self.__get_file_list_recursive(source_folder)
-        for files in files:
-            self.upload_file(os.path.join(source_folder, file), file)
-        
+        for file in files:
+            self.upload_file(os.path.join(source_folder_path, file), file)
+

@@ -4,8 +4,10 @@ from features.rekognition.rekognition_result_repository import (
 import boto3
 import json
 
+from typing import Any
 
-def lambda_handler(event, context):
+
+def lambda_handler(event: Any, context: Any) -> None:
     rekognition = boto3.client("rekognition")
     dynamodb_client = boto3.client("dynamodb")
 
@@ -26,18 +28,5 @@ def lambda_handler(event, context):
 
             repo.update_result(key, response_str)
 
-            return {
-                "statusCode": 200,
-                "body": json.dumps(
-                    {"message": "Rekognition analysis saved successfully"}
-                ),
-            }
-
         except Exception as e:
             print(f"Error processing image {key}: {str(e)}")
-            return {
-                "statusCode": 500,
-                "body": json.dumps(
-                    {"message": f"Error processing image {key}", "error": str(e)}
-                ),
-            }
