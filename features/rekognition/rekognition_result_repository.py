@@ -10,7 +10,8 @@ class RekognitionResultRepository:
         self.__table_name = table_name
 
     def __does_table_exist(self) -> bool:
-        return self.__table_name in self.__dynamodb_client.list_tables()
+        tables = self.__dynamodb_client.list_tables()["TableNames"]
+        return self.__table_name in tables
 
     def __initialize_table(self) -> None:
         self.__dynamodb_client.create_table(
@@ -27,6 +28,7 @@ class RekognitionResultRepository:
                     "AttributeType": "S",
                 }
             ],
+            BillingMode="PAY_PER_REQUEST",
         )
         waiter = self.__dynamodb_client.get_waiter("table_exists")
         waiter.wait(TableName=self.__table_name)
@@ -36,5 +38,5 @@ class RekognitionResultRepository:
             self.__initialize_table()
         self.__dynamodb_client.put_item(
             TableName=self.__table_name,
-            Item={filename: {"S": filename}, value: {"S", value}},
+            Item={"filename": {"S": filename}, "value": {"S": value}},
         )
