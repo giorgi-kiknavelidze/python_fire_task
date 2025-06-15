@@ -60,4 +60,4 @@ if you have deployed the lambda handler and have the handler connected to the s3
 then you will see AWS Rekognition results for each file in `rekognitionAnalysesDB` table in DynamoDB
 
 # Architecture Overview
-[Class Diagram](./diagram.png)
+![Class Diagram](./diagram.png)
