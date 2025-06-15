@@ -15,7 +15,7 @@ def download_from_myauto(page_number: int, output_folder: str) -> None:
 
 
 @app.command()
-def upload_to_bucket(bucket_name, source_folder: str) -> None:
+def upload_to_bucket(bucket_name: str, source_folder: str) -> None:
     my_bucket_uploader = S3Service(s3_client, bucket_name)
     my_bucket_uploader.upload_folder(source_folder)
 
