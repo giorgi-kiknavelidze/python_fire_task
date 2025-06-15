@@ -1,81 +1,63 @@
-<!--
-title: 'AWS Python Example'
-description: 'This template demonstrates how to deploy a Python function running on AWS Lambda using the Serverless Framework.'
-layout: Doc
-framework: v4
-platform: AWS
-language: python
-priority: 2
-authorLink: 'https://github.com/serverless'
-authorName: 'Serverless, Inc.'
-authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4'
--->
+# What Is This?
 
-# Serverless Framework AWS Python Example
+This is solution to "🔥🔥🔥" assignment from Business and Technology University's "Automating Cloud Systems With Python" course.
 
-This template demonstrates how to deploy a Python function running on AWS Lambda using the Serverless Framework. The deployed function does not include any event definitions as well as any kind of persistence (database). For more advanced configurations check out the [examples repo](https://github.com/serverless/examples/) which includes integrations with SQS, DynamoDB or examples of functions that are triggered in `cron`-like manner. For details about configuration of specific `events`, please refer to our [documentation](https://www.serverless.com/framework/docs/providers/aws/events/).
+# How to Deploy And Use?
 
-## Usage
+```bash
+# install dependencies for serverless framework
+npm install
 
-### Deployment
+# create virtual environment and setup python dependencies
+python3 -m venv .venv
+source ./.venv/bin/activate
+pip install -r requirements.txt
 
-In order to deploy the example, you need to run the following command:
+# setup environment variables for authentication
+export AWS_ACCESS_KEY_ID="..."
+export AWS_SECRET_ACCESS_KEY="..."
+export AWS_SESSION_TOKEN="..."
 
-```
-serverless deploy
-```
+# select role to assume
+export LAB_ROLE_ARN="arn:aws:iam::..."
 
-After running deploy, you should see output similar to:
-
-```
-Deploying "aws-python" to stage "dev" (us-east-1)
-
-✔ Service deployed to stack aws-python-dev (90s)
-
-functions:
-  hello: aws-python-dev-hello (1.9 kB)
+# deploy lambda handler using serverless
+npx serverless deploy
 ```
 
-### Invocation
+There is a limitation with serverless framework, it will attempt to create IAM roles when function is configured as a listener for S3 events.
+Since `LabRole` under AWSAcademy doesn't allow students to create new roles. You must do the following:
+* Create an S3 bucket
+* Add trigger to deployed lambda function for `s3:ObjectCreated:*` events for the bucket you created.
 
-After successful deployment, you can invoke the deployed function by using the following command:
+Note that if you are using python version other than 3.13 of python you may encounter an error when deploying with `serverless-requirements-plugin`. to resolve it you have 2 options:
+* install python 3.13 and use it instead
+* change python runtime version in serverless.yaml and attempt to deploy, this is not guaranteed to work since this code was tested with 3.13 version of python
 
-```
-serverless invoke --function hello
-```
+# How to Use the CLI?
 
-Which should result in response similar to the following:
+```bash
+# activate environment
+source ./.venv/bin/activate
 
-```json
-{
-  "statusCode": 200,
-  "body": "{\"message\": \"Go Serverless v4.0! Your function executed successfully!\"}"
-}
-```
+# mark cli.py as executable
+chmod +x ./cli.py
 
-### Local development
+# see commands that cli supports
 
-You can invoke your function locally by using the following command:
-
-```
-serverless invoke local --function hello
+./cli.py --help
 ```
 
-Which should result in response similar to the following:
+# Example usage
 
-```
-{
-  "statusCode": 200,
-  "body": "{\"message\": \"Go Serverless v4.0! Your function executed successfully!\"}"
-}
-```
-
-### Bundling dependencies
-
-In case you would like to include third-party dependencies, you will need to use a plugin called `serverless-python-requirements`. You can set it up by running the following command:
-
-```
-serverless plugin install -n serverless-python-requirements
+```bash
+mkdir ./car_images/
+./cli.py download-from-myauto 1 ./car_images/
+./cli.py upload-to-bucket some-s3-bucket ./car_images/
 ```
 
-Running the above will automatically add `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and add it as a `devDependency` to `package.json` file. The `package.json` file will be automatically created if it doesn't exist beforehand. Now you will be able to add your dependencies to `requirements.txt` file (`Pipfile` and `pyproject.toml` is also supported but requires additional configuration) and they will be automatically injected to Lambda package during build process. For more details about the plugin's configuration, please refer to [official documentation](https://github.com/UnitedIncome/serverless-python-requirements).
+if you have deployed the lambda handler and have the handler connected to the s3 bucket you are uploading to,
+then you will see AWS Rekognition results for each file in `rekognitionAnalysesDB` table in DynamoDB
+
+# Architecture Overview
+[Class Diagram](./diagram.png)
