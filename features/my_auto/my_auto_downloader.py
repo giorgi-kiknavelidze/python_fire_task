@@ -2,15 +2,14 @@ import requests
 from typing import Any
 from os import path
 
-__headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/58.0.3029.110 Safari/537.3"
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
 }
 
 
 class MyAutoDownloader:
     def __download_image(self, source: str, dest: str) -> None:
-        response = requests.get(source, stream=True, headers=__headers)
+        response = requests.get(source, stream=True, headers=headers)
         response.raise_for_status()
         with open(dest, "wb") as dest_file:
             for chunk in response:
@@ -21,7 +20,7 @@ class MyAutoDownloader:
 
     # TODO: avoid Any
     def __make_api_request(self, url: str) -> dict[str, Any]:
-        response = requests.get(url, headers=__headers)
+        response = requests.get(url, headers=headers)
         response.raise_for_status()
         return response.json()
 
